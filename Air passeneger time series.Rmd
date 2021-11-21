@@ -1,0 +1,56 @@
+# Air Passenger Time Series
+```{r ImportDataAndLibrary}
+library(ggplot2)
+library(tseries)
+library(forecast)
+```
+
+```{r}
+data<-read.csv("AirPassengers.csv")
+head(data)
+```
+
+
+```{r echo=TRUE}
+data("AirPassengers")
+tsdata<-AirPassengers
+#Identifying the class of data
+class(tsdata)
+```
+
+```{r echo=TRUE}
+#Observations of the time series data
+tsdata
+```
+
+```{r}
+boxplot(tsdata,main ="Boxplot for Air Passenegers from 1949 to 1961")
+```
+
+```{r}
+sum(is.na(data))
+```
+
+There do not appear to be any outliers and there are no missing values. Therefore no data cleaning is required.
+```{r}
+#Check the cycle of data and plot the raw data
+cycle(tsdata)
+plot(tsdata, ylab="Passengers (1000s)", type="o",main ="Monthly Air Passengers Cycle of data from 1949 to 1961")
+```
+
+Every year during the summer months there is an increase flow of passenegers travelling and it decreases after the summer season is over. As a cyclic variation, during the initial months there is a decrease in flow of passengers, then there is a increase in flow of passengers later again it decreases. 
+
+```{r}
+tsdata_decom <- decompose(tsdata, type = "multiplicative")
+plot(tsdata_decom)
+```
+
+The above figure shows the time series decomposition into trend, seasonal and random (noise) . It is clear that the time series is non-stationary (has random walks) because of seasonal effects and a trend (linear trend).
+
+```{r}
+boxplot(tsdata~cycle(tsdata),xlab="Date", ylab = "Passenger Numbers (1000's)" ,main ="Monthly Air Passengers Boxplot from 1949 to 1961")
+```
+
+In the boxplot there are more passengers travelling in months 6 to 9 with higher means and higher variances than the other months, indicating seasonality with a apparent cycle of 12 months.
+
+
